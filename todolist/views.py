@@ -2,6 +2,10 @@ from django.shortcuts import render
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serializers import TodoModelSerializer
+from .models import TodoModel
 
 # Create your views here.
 class LoginView(ObtainAuthToken):
@@ -16,3 +20,16 @@ class LoginView(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
+        
+class TodoView(APIView):
+    # authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = []
+
+    def get(self, request, format=None):
+        """
+        Return a list of all todos.
+        """
+        todos = TodoModel.objects.all()
+        serializer = TodoModelSerializer(todos, many=True)
+        return Response(serializer.data)
+        
