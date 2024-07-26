@@ -31,7 +31,7 @@ class TodoView(APIView):
         """
         Return a list of all todos.
         """
-        todos = TodoModel.objects.all()
+        todos = TodoModel.objects.filter(user=request.user)
         serializer = TodoModelSerializer(todos, many=True)
         return Response(serializer.data)
         
